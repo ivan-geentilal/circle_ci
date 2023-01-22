@@ -16,6 +16,22 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - run: echo world
+  print_world_output:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - run: echo "Hello World" > ~/output.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - output.txt    
+  print_output_file:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run: cat ~/output.txt
   build:
     docker:
       - image: cimg/base:2020.01
@@ -37,3 +53,7 @@ workflows:
           requires:
             - print_hello
       - build
+      - print_world_output
+      - print_output_file:
+          requires:
+            - print_world_output
