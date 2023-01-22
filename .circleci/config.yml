@@ -42,6 +42,15 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - print_pipeline_id
+  my_error:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - run: exit 1
+      - run:
+          name: on error
+          command: echo "Hello Error!"
+          when: on_fail
   build:
     docker:
       - image: cimg/base:2020.01
@@ -64,6 +73,7 @@ workflows:
             - print_hello
       - build
       - my_job_reuse
+      - my_error
       - print_world_output
       - print_output_file:
           requires:
